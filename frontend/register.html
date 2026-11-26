@@ -17,7 +17,7 @@
     <form id="register-form" class="card" novalidate hidden>
       <div class="field">
         <label for="name">ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" autocomplete="name" maxlength="200" required aria-describedby="name-error">
+        <input id="name" name="name" type="text" autocomplete="name" maxlength="100" required aria-describedby="name-error">
         <p id="name-error" class="field-error"></p>
       </div>
       <div class="field">
@@ -27,7 +27,7 @@
       </div>
       <div class="field">
         <label for="phone">เบอร์โทรศัพท์</label>
-        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="phone-error">
+        <input id="phone" name="phone" type="tel" autocomplete="tel" minlength="6" maxlength="20" pattern="[0-9+\-\s()]+" inputmode="tel" required aria-describedby="phone-error">
         <p id="phone-error" class="field-error"></p>
       </div>
 

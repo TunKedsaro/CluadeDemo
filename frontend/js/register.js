@@ -2,6 +2,10 @@ import { getEvent, createRegistration } from "./api.js";
 import { formatDateTime, closedReason } from "./format.js";
 
 const FIELDS = ["name", "email", "phone"];
+const NAME_MAX_LENGTH = 100;
+const PHONE_MIN_LENGTH = 6;
+const PHONE_MAX_LENGTH = 20;
+const PHONE_PATTERN = /^[0-9+\-\s()]+$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const eventInfoEl = document.getElementById("event-info");
@@ -32,12 +36,23 @@ function clearErrors() {
   showResult("", false);
 }
 
+function validatePhone(phone) {
+  if (!phone) return "กรุณากรอกเบอร์โทรศัพท์";
+  if (!PHONE_PATTERN.test(phone)) return "เบอร์โทรศัพท์ใช้ได้เฉพาะตัวเลข + - ( ) และช่องว่าง";
+  if (phone.length < PHONE_MIN_LENGTH || phone.length > PHONE_MAX_LENGTH) {
+    return `เบอร์โทรศัพท์ต้องยาว ${PHONE_MIN_LENGTH}-${PHONE_MAX_LENGTH} ตัวอักษร`;
+  }
+  return "";
+}
+
 function validate(values) {
   const errors = {};
   if (!values.name) errors.name = "กรุณากรอกชื่อ";
+  else if (values.name.length > NAME_MAX_LENGTH) errors.name = `ชื่อต้องยาวไม่เกิน ${NAME_MAX_LENGTH} ตัวอักษร`;
   if (!values.email) errors.email = "กรุณากรอกอีเมล";
   else if (!EMAIL_PATTERN.test(values.email)) errors.email = "รูปแบบอีเมลไม่ถูกต้อง";
-  if (!values.phone) errors.phone = "กรุณากรอกเบอร์โทรศัพท์";
+  const phoneError = validatePhone(values.phone);
+  if (phoneError) errors.phone = phoneError;
   if (!values.consent) errors.consent = "กรุณาให้ความยินยอมก่อนสมัคร";
   return errors;
 }
