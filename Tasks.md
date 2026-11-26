@@ -13,7 +13,7 @@
 ## 0. Shared / Infrastructure
 
 - [x] สร้าง `GLOSSARY.md` และ `CONTEXT.md`
-- [ ] สร้าง `docker-compose.yml` รัน PostgreSQL (volume, port 5432)
+- [x] สร้าง `docker-compose.yml` รัน PostgreSQL (volume, port 5432)
 - [ ] สร้าง `.env.example` (`POSTGRES_*`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `CORS_ALLOWED_ORIGINS`, `REGISTRATION_RATE_LIMIT`) และ copy เป็น `.env`
 - [ ] สร้าง `.gitignore` (`.env`, `backend/.venv`, `__pycache__`, `*.pyc`)
 - [ ] เขียน `README.md` วิธีรันในเครื่อง (compose up, migrate, createsuperuser, runserver, static server)
