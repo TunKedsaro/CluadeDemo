@@ -19,7 +19,15 @@ for attempt in range(60):
         psycopg.connect(**params).close()
         print("database is ready")
         break
-    except psycopg.OperationalError:
+    except psycopg.OperationalError as exc:
+        if "password authentication failed" in str(exc):
+            print(
+                "database rejected the password: the data volume was created with a different "
+                "POSTGRES_PASSWORD. Use the original password, set a new COMPOSE_PROJECT_NAME for a "
+                "fresh volume, or run `docker compose down -v` (deletes all data).",
+                file=sys.stderr,
+            )
+            sys.exit(1)
         time.sleep(1)
 else:
     print("database not reachable after 60s", file=sys.stderr)
