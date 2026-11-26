@@ -31,11 +31,13 @@ docker compose down                 # ลบ container (ข้อมูลใน
 docker compose down -v              # ลบ container และ volume = ข้อมูลฐานข้อมูลหายทั้งหมด
 ```
 
-เปลี่ยนพอร์ตผ่าน environment หรือ `.env` (ค่าเริ่มต้น `POSTGRES_PORT=5432`, `BACKEND_PORT=8000`, `FRONTEND_PORT=5500`):
+เปลี่ยนพอร์ตผ่าน environment หรือ `.env` (ค่าเริ่มต้น `POSTGRES_PORT=5433`, `BACKEND_PORT=8000`, `FRONTEND_PORT=5500`; ค่าใน environment ชนะค่าใน `.env`):
 
 ```bash
-BACKEND_PORT=8601 FRONTEND_PORT=5602 docker compose up -d --build
+POSTGRES_PORT=5544 BACKEND_PORT=8601 FRONTEND_PORT=5602 docker compose up -d --build
 ```
+
+PostgreSQL ใช้พอร์ต 5433 บนเครื่องเป็นค่าเริ่มต้น เพื่อไม่ชนกับ PostgreSQL ที่ติดตั้งไว้ในเครื่อง (ซึ่งมักใช้ 5432) ภายใน Docker ยังเป็น 5432 ตามปกติ
 
 `CORS_ALLOWED_ORIGINS` และ `API_BASE_URL` ของ frontend ปรับตามพอร์ตให้อัตโนมัติ ไม่ต้องแก้โค้ด (ถ้าตั้ง `CORS_ALLOWED_ORIGINS` ใน `.env` เอง ต้องให้ตรงกับ `FRONTEND_PORT`) PostgreSQL เปิดพอร์ตที่ `127.0.0.1` เท่านั้น
 
@@ -43,6 +45,24 @@ BACKEND_PORT=8601 FRONTEND_PORT=5602 docker compose up -d --build
 - Backend รันด้วย gunicorn **1 worker + หลาย thread** เพราะ rate limit เก็บใน memory ของ process ถ้าเพิ่ม worker ตัวนับจะแยกกันและ limit หลวมลง
 - ตั้ง `POSTGRES_PASSWORD` **ก่อน** รันครั้งแรก เพราะ volume จำรหัสผ่านแรกไว้
 - แก้โค้ด backend/frontend แล้วต้อง `docker compose up -d --build` ใหม่
+
+### แก้ปัญหาที่พบบ่อย
+
+**`Ports are not available ... bind: address already in use`** มีโปรแกรมอื่นใช้พอร์ตนั้นอยู่ (เช่น PostgreSQL ที่ติดตั้งในเครื่อง หรือโปรเจกต์อื่น)
+
+```bash
+netstat -an -p tcp | grep LISTEN | grep -E '\.(5433|8000|5500) '   # ดูว่าพอร์ตไหนไม่ว่าง
+sudo lsof -nP -iTCP:5433 -sTCP:LISTEN                              # ดูว่าโปรแกรมไหนใช้ (ต้อง sudo ถ้าเป็นของผู้ใช้อื่น)
+```
+
+แล้วเปลี่ยนพอร์ตที่ชนใน `.env` (`POSTGRES_PORT`, `BACKEND_PORT`, `FRONTEND_PORT`) หรือใส่นำหน้าคำสั่งตามตัวอย่างด้านบน
+
+**backend ไม่ขึ้น healthy / log มี `database rejected the password`** volume ของฐานข้อมูลถูกสร้างไว้ด้วย `POSTGRES_PASSWORD` คนละค่ากับตอนนี้ (PostgreSQL ตั้งรหัสผ่านครั้งเดียวตอนสร้าง volume) เลือกอย่างใดอย่างหนึ่ง
+- ใส่รหัสผ่านเดิมกลับใน `.env`
+- เปลี่ยน `COMPOSE_PROJECT_NAME` ใน `.env` เป็นชื่อใหม่ จะได้ volume ใหม่ (volume เดิมยังอยู่ ไม่ลบ)
+- `docker compose down -v` แล้ว up ใหม่ (**ลบข้อมูลทั้งหมด**)
+
+ดูชื่อ container/volume ที่ใช้อยู่ด้วย `docker compose ps` และ `docker volume ls`
 
 ## ข้อกำหนดเบื้องต้น
 - Python 3.12+ และ Docker (Docker Desktop ต้องเปิดอยู่)
@@ -113,7 +133,7 @@ Test ต้องใช้ PostgreSQL ที่รันอยู่ (มี con
 
 ## หมายเหตุ
 - ตั้ง `POSTGRES_PASSWORD` ใน `.env` **ก่อน** รัน `docker compose up` ครั้งแรก เพราะ volume จะจำรหัสผ่านแรกไว้ ถ้าแก้ภายหลังจะ login ฐานข้อมูลไม่ได้ (ต้องลบ volume ซึ่งลบข้อมูลทั้งหมด)
-- ถ้า port 5432 ถูกใช้อยู่ ให้ตั้ง `POSTGRES_PORT` ใน `.env` เป็นพอร์ตอื่น (เช่น 5433)
+- ถ้าพอร์ตชน ดูหัวข้อ "แก้ปัญหาที่พบบ่อย" ด้านบน
 - `COMPOSE_PROJECT_NAME` ใน `.env` กำหนดชื่อ project, volume และชื่อ container (`<ชื่อ>-db`) ถ้าจะรันอีกชุดในเครื่องเดียวกัน ให้ตั้งชื่อต่างกันและใช้พอร์ตต่างกัน
 - ถ้ารันแบบ venv แล้วเปลี่ยนพอร์ต Backend จาก 8000 ต้องแก้ `API_BASE_URL` ใน `frontend/js/config.js` ให้ตรงด้วย (ใน Docker ไฟล์นี้ถูกสร้างใหม่จาก env ตอนสตาร์ต) และถ้าเปลี่ยนพอร์ต Frontend จาก 5500 ต้องแก้ `CORS_ALLOWED_ORIGINS` ใน `.env`
 - `REGISTRATION_RATE_LIMIT` รูปแบบ `<จำนวน>/<s|m|h>` (ต่อ IP, เก็บใน cache ของ process ใช้สำหรับรันในเครื่อง)
