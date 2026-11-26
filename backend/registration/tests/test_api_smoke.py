@@ -123,3 +123,23 @@ def test_last_seat_race_only_one_wins(client, payload):
     [t.join() for t in threads]
     assert sorted(results) == [201, 409, 409, 409, 409]
     assert Registration.objects.count() == 1
+
+
+def test_integrity_error_becomes_409(client, event, payload, monkeypatch):
+    from django.db import IntegrityError
+
+    def boom(*args, **kwargs):
+        raise IntegrityError("unique_confirmed_email_per_event")
+
+    monkeypatch.setattr(Registration.objects, "create", boom)
+    assert post(client, event.id, payload).status_code == 409
+
+
+def test_db_unique_constraint_blocks_duplicate_confirmed(event, db):
+    from django.db import IntegrityError, transaction
+
+    kwargs = dict(event=event, name="a", email="a@example.com", phone="0811111111",
+                  consent_at=timezone.now())
+    Registration.objects.create(**kwargs)
+    with pytest.raises(IntegrityError), transaction.atomic():
+        Registration.objects.create(**kwargs)

@@ -3,7 +3,6 @@ from datetime import timedelta
 import pytest
 from django.core.cache import cache
 from django.utils import timezone
-from ninja.testing import TestClient  # noqa: F401  (kept for ad-hoc API tests)
 
 from registration.models import Event
 
