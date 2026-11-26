@@ -1,0 +1,90 @@
+:root {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-text: #1b1f24;
+  --color-muted: #4a5360;
+  --color-primary: #0b5cad;
+  --color-primary-text: #ffffff;
+  --color-border: #c4cad3;
+  --color-error: #b3261e;
+  --color-error-bg: #fdecea;
+  --color-success: #1b6e3a;
+  --color-success-bg: #e6f4ea;
+  --radius: 8px;
+  --space: 1rem;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Noto Sans Thai", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+.container { max-width: 720px; margin: 0 auto; padding: 0 var(--space); }
+.site-header { background: var(--color-primary); color: var(--color-primary-text); padding: var(--space) 0; }
+.site-header h1 { margin: 0; font-size: 1.4rem; }
+main { padding-top: var(--space); padding-bottom: 2rem; }
+a { color: var(--color-primary); }
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space);
+  margin-bottom: var(--space);
+}
+
+.event-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space); }
+.event-card__title { margin: 0 0 0.5rem; font-size: 1.2rem; }
+.event-card__row { margin: 0.15rem 0; color: var(--color-muted); }
+
+.button {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.6rem 1.2rem;
+  font: inherit;
+  color: var(--color-text);
+  background: #e3e6ea;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  cursor: pointer;
+}
+.button--primary { background: var(--color-primary); color: var(--color-primary-text); border-color: var(--color-primary); }
+.button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.message { padding: 0.75rem var(--space); border-radius: var(--radius); background: #e8eef5; }
+.message--error { background: var(--color-error-bg); color: var(--color-error); }
+.message--success { background: var(--color-success-bg); color: var(--color-success); }
+[hidden] { display: none !important; }
+
+.field { margin-bottom: var(--space); }
+.field label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+.field input[type="text"], .field input[type="email"], .field input[type="tel"] {
+  width: 100%;
+  padding: 0.6rem;
+  font: inherit;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+.field input[aria-invalid="true"] { border-color: var(--color-error); }
+.field--checkbox { display: flex; gap: 0.5rem; align-items: flex-start; margin-bottom: 0.25rem; }
+.field--checkbox label { margin: 0; font-weight: 400; }
+.field--checkbox input { margin-top: 0.4rem; width: 1.1rem; height: 1.1rem; }
+.field-error { margin: 0.25rem 0 0; color: var(--color-error); font-size: 0.9rem; }
+.field-error:empty { display: none; }
+.consent-text { font-size: 0.9rem; color: var(--color-muted); margin: 0.25rem 0 0.5rem; }
+
+/* Honeypot: off-screen, not display:none (so naive bots still fill it) */
+.hp-field { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+:focus-visible { outline: 3px solid #f2a900; outline-offset: 2px; }
+
+@media (min-width: 600px) {
+  .site-header h1 { font-size: 1.8rem; }
+  .card { padding: 1.5rem; }
+}
