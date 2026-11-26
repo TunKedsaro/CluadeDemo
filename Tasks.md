@@ -26,7 +26,7 @@
 - [x] `.dockerignore` (root/backend/frontend) และอัปเดต `.env.example`
 - [x] อัปเดต `README.md` (เริ่มเร็วด้วย Docker + รันแบบ venv)
 - [x] ตรวจจริงด้วย project แยก `dockerize-verify`: up จากศูนย์, API/frontend/admin css/login, สมัคร 201 แล้ว 409, up ซ้ำไม่ seed ซ้ำ, restart แล้วข้อมูลคงอยู่, รันโดยไม่มี env-file, pytest 128 ผ่าน
-- [ ] ตรวจในเบราว์เซอร์จริง (ยังไม่ได้ทำ)
+- [x] ตรวจในเบราว์เซอร์จริง (Chromium ตรวจ flow สมัคร/409/admin/restart บน Docker แล้ว)
 
 ## 1. Backend (Django + Django Ninja)
 
@@ -79,7 +79,7 @@
   - [x] แสดงข้อความตามรหัส 409 (เต็ม/สมัครซ้ำ/Event ผ่านไปแล้ว), 422, 404 และ 429 (ส่งถี่เกินไป)
   - [x] ปิดปุ่มส่งระหว่างรอผลเพื่อกันกดซ้ำ
   - [x] ใส่ข้อความ consent ที่ให้ฝ่ายกฎหมายหรือ DPO ตรวจก่อนใช้งานจริง
-- [ ] CSS responsive พื้นฐาน (มือถือและเดสก์ท็อป) และ accessibility เบื้องต้น (label, focus, contrast)
+- [x] CSS responsive พื้นฐาน (มือถือและเดสก์ท็อป) และ accessibility เบื้องต้น (label, focus, contrast)
 - [x] ป้องกัน XSS: แสดงข้อมูลจาก API ด้วย `textContent` ไม่ใช้ `innerHTML`
 - [x] เสิร์ฟด้วย static server (เช่น `python -m http.server 5500`) ให้ตรงกับ CORS origin
 
@@ -117,4 +117,4 @@
 ### 3.4 เกณฑ์เสร็จ (Definition of Done)
 - [x] `pytest` ผ่านทั้งหมด
 - [ ] ผ่าน manual test ใน 3.2 และ 3.3
-- [ ] ทำตาม `README.md` แล้วรันได้ครบบนเครื่องใหม่
+- [x] ทำตาม `README.md` แล้วรันได้ครบบนเครื่องใหม่ (ทดสอบบน clean clone ที่ layer Docker เป็น cache และ Python 3.14; ยังไม่ได้ทดสอบเครื่องที่ไม่มี Docker มาก่อน)
