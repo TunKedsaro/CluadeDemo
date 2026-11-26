@@ -97,5 +97,6 @@ def test_env_example_has_only_placeholder_secrets():
     text = (REPO / ".env.example").read_text()
     assert "change-me" in text
     real = os.environ.get("POSTGRES_PASSWORD")
-    if real:
+    # A placeholder copied straight from .env.example is allowed to appear in it.
+    if real and not real.startswith("change-me"):
         assert real not in text
