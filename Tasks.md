@@ -18,6 +18,16 @@
 - [x] สร้าง `.gitignore` (`.env`, `backend/.venv`, `__pycache__`, `*.pyc`)
 - [x] เขียน `README.md` วิธีรันในเครื่อง (compose up, migrate, createsuperuser, runserver, static server)
 
+### 0.1 Docker all-in-one (`docker compose up -d --build`)
+- [x] `backend/Dockerfile` + `docker-entrypoint.sh` (รอ DB, migrate, สร้าง superuser จาก env, seed, gunicorn 1 worker + threads, whitenoise สำหรับ static ของ admin)
+- [x] management command `seed_demo_events` (idempotent, 4 Event อนาคต รวม 1 รายการที่นั่งเหลือน้อย)
+- [x] `frontend/Dockerfile` (nginx) สร้าง `js/config.js` จาก `API_BASE_URL` ตอนสตาร์ต; `config.js` ใน repo ยังใช้กับ `python3 -m http.server` ได้
+- [x] `docker-compose.yml` services db/backend/frontend, healthcheck, พอร์ตตั้งผ่าน env, รันได้โดยไม่มี `.env`, postgres bind 127.0.0.1
+- [x] `.dockerignore` (root/backend/frontend) และอัปเดต `.env.example`
+- [x] อัปเดต `README.md` (เริ่มเร็วด้วย Docker + รันแบบ venv)
+- [x] ตรวจจริงด้วย project แยก `dockerize-verify`: up จากศูนย์, API/frontend/admin css/login, สมัคร 201 แล้ว 409, up ซ้ำไม่ seed ซ้ำ, restart แล้วข้อมูลคงอยู่, รันโดยไม่มี env-file, pytest 128 ผ่าน
+- [ ] ตรวจในเบราว์เซอร์จริง (ยังไม่ได้ทำ)
+
 ## 1. Backend (Django + Django Ninja)
 
 ### 1.1 โครงสร้างและ config
