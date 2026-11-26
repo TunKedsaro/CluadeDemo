@@ -31,7 +31,7 @@ body {
 .container { max-width: 720px; margin: 0 auto; padding: 0 var(--space); }
 .site-header { background: var(--color-primary); color: var(--color-primary-text); padding: var(--space) 0; }
 .site-header h1 { margin: 0; font-size: 1.4rem; }
-main { padding-top: var(--space); padding-bottom: 2rem; }
+main.container { padding-top: var(--space); padding-bottom: 2rem; }
 a { color: var(--color-primary); overflow-wrap: anywhere; }
 
 .card {
