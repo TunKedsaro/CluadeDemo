@@ -53,7 +53,7 @@ BACKEND_PORT=8601 FRONTEND_PORT=5602 docker compose up -d --build
 ถ้าชนกับ stack ด้านบน ให้ `docker compose down` ก่อน หรือเปลี่ยนพอร์ต
 
 ```bash
-# 1) ตั้งค่า environment (แก้ค่า password / secret ใน .env ก่อนใช้งาน ห้าม commit .env)
+# 1) ตั้งค่า environment (แก้ POSTGRES_PASSWORD และ DJANGO_SECRET_KEY ใน .env ก่อนใช้งาน ห้าม commit .env)
 cp .env.example .env
 
 # 2) เริ่มฐานข้อมูล PostgreSQL
