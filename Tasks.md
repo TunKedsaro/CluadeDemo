@@ -14,45 +14,45 @@
 
 - [x] สร้าง `GLOSSARY.md` และ `CONTEXT.md`
 - [x] สร้าง `docker-compose.yml` รัน PostgreSQL (volume, port 5432)
-- [ ] สร้าง `.env.example` (`POSTGRES_*`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `CORS_ALLOWED_ORIGINS`, `REGISTRATION_RATE_LIMIT`) และ copy เป็น `.env`
-- [ ] สร้าง `.gitignore` (`.env`, `backend/.venv`, `__pycache__`, `*.pyc`)
-- [ ] เขียน `README.md` วิธีรันในเครื่อง (compose up, migrate, createsuperuser, runserver, static server)
+- [x] สร้าง `.env.example` (`POSTGRES_*`, `DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, `CORS_ALLOWED_ORIGINS`, `REGISTRATION_RATE_LIMIT`) และ copy เป็น `.env`
+- [x] สร้าง `.gitignore` (`.env`, `backend/.venv`, `__pycache__`, `*.pyc`)
+- [x] เขียน `README.md` วิธีรันในเครื่อง (compose up, migrate, createsuperuser, runserver, static server)
 
 ## 1. Backend (Django + Django Ninja)
 
 ### 1.1 โครงสร้างและ config
-- [ ] สร้าง `backend/` และ venv (`backend/.venv`)
-- [ ] ติดตั้งแพ็กเกจและบันทึก `requirements.txt`: `django`, `django-ninja`, `django-cors-headers`, `psycopg[binary]`, `pytest`, `pytest-django`, `python-dotenv`
-- [ ] สร้างโปรเจกต์ `config` และแอป `registration`
-- [ ] เขียน `settings.py` (PostgreSQL, CORS, อ่านค่าจาก `.env`, `TIME_ZONE`, `REGISTRATION_RATE_LIMIT`)
+- [x] สร้าง `backend/` และ venv (`backend/.venv`)
+- [x] ติดตั้งแพ็กเกจและบันทึก `requirements.txt`: `django`, `django-ninja`, `django-cors-headers`, `psycopg[binary]`, `pytest`, `pytest-django`, `python-dotenv`
+- [x] สร้างโปรเจกต์ `config` และแอป `registration`
+- [x] เขียน `settings.py` (PostgreSQL, CORS, อ่านค่าจาก `.env`, `TIME_ZONE`, `REGISTRATION_RATE_LIMIT`)
 
 ### 1.2 Models
-- [ ] `Event`: `name`, `starts_at`, `location`, `capacity`
-- [ ] `Registration`: `event` (FK), `name`, `email`, `phone`, `consent_at`, `status` (`confirmed`/`cancelled`), `created_at`
-- [ ] Unique constraint: 1 อีเมลต่อ Event เฉพาะ Registration ที่ `confirmed`
-- [ ] Property คำนวณ Seat คงเหลือ (นับเฉพาะ `confirmed`)
-- [ ] สร้างและรัน migrations
+- [x] `Event`: `name`, `starts_at`, `location`, `capacity`
+- [x] `Registration`: `event` (FK), `name`, `email`, `phone`, `consent_at`, `status` (`confirmed`/`cancelled`), `created_at`
+- [x] Unique constraint: 1 อีเมลต่อ Event เฉพาะ Registration ที่ `confirmed`
+- [x] Property คำนวณ Seat คงเหลือ (นับเฉพาะ `confirmed`)
+- [x] สร้างและรัน migrations
 
 ### 1.3 Django Admin
-- [ ] ลงทะเบียน `Event` (สร้าง/แก้ไข)
-- [ ] ลงทะเบียน `Registration` พร้อม filter ตาม Event/สถานะ และ action "Cancel selected registrations"
+- [x] ลงทะเบียน `Event` (สร้าง/แก้ไข)
+- [x] ลงทะเบียน `Registration` พร้อม filter ตาม Event/สถานะ และ action "Cancel selected registrations"
 
 ### 1.4 API (Django Ninja + Pydantic)
-- [ ] `GET /api/events` คืนรายการ Event พร้อม Seat คงเหลือ
-- [ ] `GET /api/events/{id}` คืนรายละเอียด Event (404 ถ้าไม่พบ)
-- [ ] `POST /api/events/{id}/registrations` รับ `name`, `email`, `phone`, `consent` แล้วคืน 201
-  - [ ] Pydantic schema ตรวจรูปแบบอีเมลและความยาวฟิลด์ (422)
-  - [ ] ปฏิเสธถ้า `consent` ไม่เป็น true (422)
-  - [ ] ปฏิเสธ Event ที่ผ่านวันจัดไปแล้ว (409)
-  - [ ] ปฏิเสธเมื่อที่นั่งเต็ม (409) โดยล็อกแถวด้วย `select_for_update` ใน transaction เพื่อกัน race condition
-  - [ ] ปฏิเสธอีเมลซ้ำใน Event เดียวกัน (409) และรองรับกรณีชนที่ constraint ของฐานข้อมูล
-  - [ ] บันทึก `consent_at` เป็นเวลาปัจจุบัน (ไม่เก็บ IP)
-- [ ] Rate limit ต่อ IP ที่ endpoint สมัคร (ค่าจาก `REGISTRATION_RATE_LIMIT`)
-- [ ] Honeypot field: ถ้ามีค่าให้ปฏิเสธโดยไม่บอกเหตุผลละเอียด
-- [ ] ผูก API เข้า `config/urls.py` พร้อม `/admin/`
+- [x] `GET /api/events` คืนรายการ Event พร้อม Seat คงเหลือ
+- [x] `GET /api/events/{id}` คืนรายละเอียด Event (404 ถ้าไม่พบ)
+- [x] `POST /api/events/{id}/registrations` รับ `name`, `email`, `phone`, `consent` แล้วคืน 201
+  - [x] Pydantic schema ตรวจรูปแบบอีเมลและความยาวฟิลด์ (422)
+  - [x] ปฏิเสธถ้า `consent` ไม่เป็น true (422)
+  - [x] ปฏิเสธ Event ที่ผ่านวันจัดไปแล้ว (409)
+  - [x] ปฏิเสธเมื่อที่นั่งเต็ม (409) โดยล็อกแถวด้วย `select_for_update` ใน transaction เพื่อกัน race condition
+  - [x] ปฏิเสธอีเมลซ้ำใน Event เดียวกัน (409) และรองรับกรณีชนที่ constraint ของฐานข้อมูล
+  - [x] บันทึก `consent_at` เป็นเวลาปัจจุบัน (ไม่เก็บ IP)
+- [x] Rate limit ต่อ IP ที่ endpoint สมัคร (ค่าจาก `REGISTRATION_RATE_LIMIT`)
+- [x] Honeypot field: ถ้ามีค่าให้ปฏิเสธโดยไม่บอกเหตุผลละเอียด
+- [x] ผูก API เข้า `config/urls.py` พร้อม `/admin/`
 
 ### 1.5 Backend tests (`pytest` + `pytest-django`)
-- [ ] ตั้งค่า `pytest.ini` / `conftest.py`
+- [x] ตั้งค่า `pytest.ini` / `conftest.py`
 - [ ] ดูหัวข้อ 3 (QA) สำหรับรายการเคสทดสอบ
 
 ## 2. Frontend (HTML/CSS/JS ล้วน)
