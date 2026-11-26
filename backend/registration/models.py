@@ -10,7 +10,7 @@ class EventQuerySet(models.QuerySet):
                 "registrations",
                 filter=Q(registrations__status="confirmed"),
             )
-        )
+        ).order_by("starts_at", "id")
 
 
 class Event(models.Model):
