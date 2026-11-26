@@ -57,9 +57,9 @@
 
 ## 2. Frontend (HTML/CSS/JS ล้วน)
 
-- [ ] สร้างโครง `frontend/` (`index.html`, `register.html`, `css/style.css`, `js/`)
-- [ ] `js/config.js`: ค่า API base URL (เช่น `http://localhost:8000/api`)
-- [ ] `js/api.js`: ฟังก์ชัน `fetch` เรียก 3 endpoint และจัดการรหัสข้อผิดพลาด
+- [x] สร้างโครง `frontend/` (`index.html`, `register.html`, `css/style.css`, `js/`)
+- [x] `js/config.js`: ค่า API base URL (เช่น `http://localhost:8000/api`)
+- [x] `js/api.js`: ฟังก์ชัน `fetch` เรียก 3 endpoint และจัดการรหัสข้อผิดพลาด
 - [ ] หน้า 1 `index.html`: แสดงรายการ Event (ชื่อ, วันเวลา, สถานที่, Seat คงเหลือ) พร้อมลิงก์ไปสมัคร
   - [ ] สถานะกำลังโหลด, ข้อผิดพลาดเมื่อเรียก API ไม่ได้, กรณีไม่มี Event
   - [ ] Event ที่เต็มหรือผ่านไปแล้วปิดปุ่มสมัคร
@@ -70,8 +70,8 @@
   - [ ] ปิดปุ่มส่งระหว่างรอผลเพื่อกันกดซ้ำ
   - [ ] ใส่ข้อความ consent ที่ให้ฝ่ายกฎหมายหรือ DPO ตรวจก่อนใช้งานจริง
 - [ ] CSS responsive พื้นฐาน (มือถือและเดสก์ท็อป) และ accessibility เบื้องต้น (label, focus, contrast)
-- [ ] ป้องกัน XSS: แสดงข้อมูลจาก API ด้วย `textContent` ไม่ใช้ `innerHTML`
-- [ ] เสิร์ฟด้วย static server (เช่น `python -m http.server 5500`) ให้ตรงกับ CORS origin
+- [x] ป้องกัน XSS: แสดงข้อมูลจาก API ด้วย `textContent` ไม่ใช้ `innerHTML`
+- [x] เสิร์ฟด้วย static server (เช่น `python -m http.server 5500`) ให้ตรงกับ CORS origin
 
 ## 3. QA
 
