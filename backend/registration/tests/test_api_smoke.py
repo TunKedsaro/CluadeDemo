@@ -93,7 +93,8 @@ def test_rate_limit_429(client, event, payload, settings):
     assert "detail" in post(client, event.id, payload).json()
 
 
-def test_cors_allows_frontend_origin(client, event):
+def test_cors_allows_frontend_origin(client, event, settings):
+    settings.CORS_ALLOWED_ORIGINS = ["http://localhost:5500"]
     res = client.get("/api/events", HTTP_ORIGIN="http://localhost:5500")
     assert res["Access-Control-Allow-Origin"] == "http://localhost:5500"
     res = client.get("/api/events", HTTP_ORIGIN="http://evil.example")
