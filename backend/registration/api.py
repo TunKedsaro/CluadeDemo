@@ -1,5 +1,5 @@
 from django.http import Http404, HttpRequest
-from ninja import NinjaAPI
+from ninja import NinjaAPI, Status
 
 from .models import Event
 from .schemas import ErrorOut, EventOut, RegistrationIn, RegistrationOut
@@ -27,7 +27,7 @@ def list_events(request: HttpRequest):
 def get_event(request: HttpRequest, event_id: int):
     event = Event.objects.with_confirmed_count().filter(pk=event_id).first()
     if event is None:
-        return 404, {"detail": "ไม่พบ Event"}
+        return Status(404, {"detail": "ไม่พบ Event"})
     return event
 
 
@@ -43,4 +43,4 @@ def create_registration(request: HttpRequest, event_id: int, payload: Registrati
     registration = register_attendee(
         event_id=event_id, name=payload.name, email=payload.email, phone=payload.phone
     )
-    return 201, registration
+    return Status(201, registration)
