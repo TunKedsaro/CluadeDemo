@@ -1,14 +1,17 @@
+# One command: docker compose up -d --build
+# Works with no .env (all values below have dev defaults). Values here are for local dev only.
 services:
   db:
     image: postgres:16-alpine
-    container_name: event-registration-db
+    container_name: ${COMPOSE_PROJECT_NAME:-event-registration}-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-event_registration}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # Bound to loopback only: dev database must not be reachable from the network.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -16,6 +19,58 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+
+  backend:
+    build: ./backend
+    container_name: ${COMPOSE_PROJECT_NAME:-event-registration}-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-event_registration}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # Inside the compose network: always service name + container port
+      # (ignores POSTGRES_HOST/POSTGRES_PORT from .env, which are for running outside Docker).
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-dev-only-insecure-key-do-not-use-in-production}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-False}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-5500},http://127.0.0.1:${FRONTEND_PORT:-5500}}
+      REGISTRATION_RATE_LIMIT: ${REGISTRATION_RATE_LIMIT:-5/m}
+      # DEV-ONLY admin account. Never use these values for real.
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME:-admin}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-admin12345}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL:-admin@example.com}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen(u.Request('http://127.0.0.1:8000/api/events', headers={'Host': 'localhost'}), timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  frontend:
+    build: ./frontend
+    container_name: ${COMPOSE_PROJECT_NAME:-event-registration}-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      # URL the BROWSER uses to reach the backend (host port, not the container port).
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:${BACKEND_PORT:-8000}/api}
+    ports:
+      - "${FRONTEND_PORT:-5500}:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:80/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
