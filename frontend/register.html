@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>สมัครเข้าร่วม Event</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header"><div class="container"><h1>สมัครเข้าร่วม Event</h1></div></header>
+  <main class="container">
+    <p><a href="index.html">&larr; กลับไปรายการ Event</a></p>
+    <section id="event-info" class="card" hidden></section>
+    <p id="status" class="message" role="status" aria-live="polite" hidden></p>
+    <p id="result" class="message" role="status" aria-live="polite" hidden></p>
+
+    <form id="register-form" class="card" novalidate hidden>
+      <div class="field">
+        <label for="name">ชื่อ-นามสกุล</label>
+        <input id="name" name="name" type="text" autocomplete="name" maxlength="200" required aria-describedby="name-error">
+        <p id="name-error" class="field-error"></p>
+      </div>
+      <div class="field">
+        <label for="email">อีเมล</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="email-error">
+        <p id="email-error" class="field-error"></p>
+      </div>
+      <div class="field">
+        <label for="phone">เบอร์โทรศัพท์</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" required aria-describedby="phone-error">
+        <p id="phone-error" class="field-error"></p>
+      </div>
+
+      <!-- Honeypot: hidden by CSS, must stay empty -->
+      <div class="hp-field" aria-hidden="true">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="field field--checkbox">
+        <input id="consent" name="consent" type="checkbox" aria-describedby="consent-text consent-error">
+        <label for="consent">ข้าพเจ้ายินยอมให้เก็บและใช้ข้อมูลส่วนบุคคล</label>
+      </div>
+      <p id="consent-text" class="consent-text">
+        ข้อความร่าง: ข้าพเจ้ายินยอมให้ผู้จัดเก็บ ใช้ และเปิดเผยชื่อ อีเมล และเบอร์โทรศัพท์
+        เพื่อวัตถุประสงค์ในการลงทะเบียนและติดต่อเกี่ยวกับ Event นี้เท่านั้น
+        (ข้อความนี้เป็นร่าง ต้องให้ฝ่ายกฎหมายหรือ DPO ตรวจสอบก่อนใช้งานจริง)
+      </p>
+      <p id="consent-error" class="field-error"></p>
+
+      <button id="submit-button" type="submit" class="button button--primary">ส่งใบสมัคร</button>
+    </form>
+  </main>
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>
